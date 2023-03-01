@@ -83,6 +83,38 @@ Bu dosyanın içindeki talimatları izleyerek db erişim işlevlerini `api/schem
 
 - Her gönderici tarafından gönderilen gönderi sayısını bulun.
 - Sipariş sayısına göre ölçülen en iyi performans gösteren ilk 5 çalışanı bulun.
+
+select count(e.Id),e.FirstName from [Order] o
+join Employee e 
+on e.Id=o.EmployeeId
+group by e.Id
+order by count(e.Id)
+
 - Gelir olarak ölçülen en iyi performans gösteren ilk 5 çalışanı bulun.
+select e.FirstName , sum(UnitPrice) from OrderDetail od
+join [order] o on o.Id=od.OrderId
+join Employee e on e.Id=o.EmployeeId
+group by e.Id
+order by sum(UnitPrice) desc
+limit 5
+
 - En az gelir getiren kategoriyi bulun.
+select sum(od.UnitPrice),c.CategoryName from OrderDetail od
+join Product p 
+on p.Id=od.ProductId
+join Category c 
+on c.Id=p.CategoryId
+group by c.CategoryName
+order by sum(od.UnitPrice)
+limit 1;
+
 - En çok siparişi olan müşteri ülkesini bulun.
+
+select sum(od.Quantity),c.Country from OrderDetail od
+join [Order] o 
+on o.Id=od.OrderId
+join Customer c 
+on c.Id=o.CustomerId
+group by c.Country
+order by sum(od.Quantity) desc
+limit 1
